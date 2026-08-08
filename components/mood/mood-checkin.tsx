@@ -128,7 +128,7 @@ export function MoodCheckin() {
                       key={scoreStr}
                       onClick={() => setMoodScore(score)}
                       className={cn(
-                        "flex flex-col items-center gap-2 p-2 rounded-xl transition-all duration-200",
+                        "flex flex-col items-center gap-2 p-2 rounded-md transition-all duration-200",
                         "hover:scale-110 active:scale-95",
                         isSelected
                           ? "bg-primary/10 ring-2 ring-primary scale-110"
@@ -137,7 +137,7 @@ export function MoodCheckin() {
                     >
                       <div
                         className={cn(
-                          "w-10 h-10 rounded-2xl font-mono text-sm font-extrabold flex items-center justify-center transition-all",
+                          "w-10 h-10 rounded-lg font-mono text-sm font-extrabold flex items-center justify-center transition-all",
                           isSelected
                             ? "bg-primary text-primary-foreground shadow-md"
                             : "bg-muted text-muted-foreground border border-border/60"

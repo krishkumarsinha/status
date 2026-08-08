@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { HabitCard } from "@/components/habits/habit-card";
 import { CategoryFilter } from "@/components/habits/category-filter";
 import { HabitForm } from "@/components/habits/habit-form";
+import { FoldText } from "@/components/ui/fold-text";
 import { getTrackingDate, formatTrackingDate } from "@/lib/date-utils";
 
 export default function HabitsPage() {
@@ -36,7 +37,7 @@ export default function HabitsPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Habits</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground"><FoldText text="Habits" splitBy="char" trigger="mount" fontSize="inherit" fontWeight={700} /></h1>
           <p className="text-muted-foreground mt-1">Today is {todayStr}. Keep up the good work!</p>
         </div>
         
@@ -59,8 +60,8 @@ export default function HabitsPage() {
       )}
 
       {habits.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 px-4 text-center border rounded-xl border-dashed bg-muted/10">
-          <div className="bg-primary/10 p-4 rounded-full mb-4">
+        <div className="flex flex-col items-center justify-center py-20 px-4 text-center border rounded-md border-dashed bg-muted/10">
+          <div className="bg-primary/10 p-4 rounded-md mb-4">
             <ListTodo className="w-8 h-8 text-primary" />
           </div>
           <h2 className="text-xl font-semibold mb-2">No habits yet</h2>

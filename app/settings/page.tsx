@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { FoldText } from "@/components/ui/fold-text";
 
 export default function SettingsPage() {
   const [mounted, setMounted] = useState(false);
@@ -37,7 +38,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight"><FoldText text="Settings" splitBy="char" trigger="mount" fontSize="inherit" fontWeight={700} /></h1>
         <p className="text-muted-foreground mt-1">Manage your tracking preferences and daily goals.</p>
       </div>
 

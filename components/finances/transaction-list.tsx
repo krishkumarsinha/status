@@ -76,11 +76,11 @@ export function TransactionList({ transactions }: TransactionListProps) {
           filtered.map((tx) => (
             <div
               key={tx.id}
-              className="flex items-center justify-between p-3 rounded-xl border border-border/60 bg-card/50 hover:bg-muted/40 transition-colors group"
+              className="flex items-center justify-between p-3 rounded-md border border-border/60 bg-card/50 hover:bg-muted/40 transition-colors group"
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg ${
+                  className={`w-9 h-9 rounded-md flex items-center justify-center text-lg ${
                     tx.type === "income"
                       ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                       : "bg-destructive/10 text-destructive"

@@ -71,7 +71,7 @@ export function StreakSpotlight({ habits }: StreakSpotlightProps) {
           </div>
           
           <h3 className="text-xl font-bold text-center mt-2">{habit.name}</h3>
-          <span className="text-xs uppercase tracking-wider font-semibold text-orange-600/70 dark:text-orange-400/70 mt-1 bg-orange-100 dark:bg-orange-900/30 px-2 py-1 rounded-full">
+          <span className="text-xs uppercase tracking-wider font-semibold text-orange-600/70 dark:text-orange-400/70 mt-1 bg-orange-100 dark:bg-orange-900/30 px-2 py-1 rounded-md">
             {habit.category}
           </span>
           

@@ -69,7 +69,7 @@ export function JournalList({ onSelectDate, selectedDate }: JournalListProps) {
               <div
                 key={entry.id}
                 onClick={() => onSelectDate(entry.date)}
-                className={`p-3.5 rounded-xl border transition-all cursor-pointer group ${
+                className={`p-3.5 rounded-md border transition-all cursor-pointer group ${
                   isSelected
                     ? "border-primary bg-primary/5 shadow-xs"
                     : "border-border/60 hover:border-border bg-card hover:bg-muted/40"

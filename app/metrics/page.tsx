@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { FoldText } from "@/components/ui/fold-text";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -162,7 +163,7 @@ export default function DailyMetricsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card p-4 sm:p-6 rounded-2xl border border-border/60 shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Daily Metrics</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight"><FoldText text="Daily Metrics" splitBy="char" trigger="mount" fontSize="inherit" fontWeight={800} /></h1>
             {isToday && (
               <Badge variant="default" className="text-xs">
                 Active Day

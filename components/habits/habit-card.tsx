@@ -77,7 +77,7 @@ export function HabitCard({ habit }: HabitCardProps) {
                 {habit.category}
               </Badge>
               {streak > 0 && (
-                <div className="flex items-center text-xs font-medium text-orange-500 bg-orange-500/10 px-1.5 py-0.5 rounded-full" title="Current streak">
+                <div className="flex items-center text-xs font-medium text-orange-500 bg-orange-500/10 px-1.5 py-0.5 rounded-md" title="Current streak">
                   <Flame className="w-3 h-3 mr-1" />
                   {streak}
                 </div>

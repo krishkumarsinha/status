@@ -15,11 +15,14 @@ import Link from "next/link";
 import { useHabitStore } from "@/lib/stores/habit-store";
 import { useHealthStore } from "@/lib/stores/health-store";
 import { useMoodStore } from "@/lib/stores/mood-store";
+import { useFinanceStore } from "@/lib/stores/finance-store";
+import { useJournalStore } from "@/lib/stores/journal-store";
 import { useSettingsStore } from "@/lib/stores/settings-store";
 import { MOOD_EMOJIS } from "@/types";
 
 import { LiveClockCard } from "@/components/dashboard/live-clock-card";
 import { DailyAnalyticsReport } from "@/components/dashboard/daily-analytics-report";
+import { ComprehensiveUserReport } from "@/components/dashboard/comprehensive-user-report";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { StreakSpotlight } from "@/components/dashboard/streak-spotlight";
 import { WeeklyChart } from "@/components/dashboard/weekly-chart";
@@ -28,13 +31,13 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { getTrackingDate } from "@/lib/date-utils";
+import { FoldText } from "@/components/ui/fold-text";
 
 export default function DashboardPage() {
   const [mounted, setMounted] = useState(false);
   
   const habits = useHabitStore((state) => state.habits);
   const healthEntries = useHealthStore((state) => state.entries);
-  const getTodayHealth = useHealthStore((state) => state.getTodayEntry);
   const moodEntries = useMoodStore((state) => state.entries);
   const getTodayMood = useMoodStore((state) => state.getTodayEntry);
   const settings = useSettingsStore((state) => state.settings);
@@ -42,6 +45,8 @@ export default function DashboardPage() {
   const loadHabits = useHabitStore((state) => state.loadHabits);
   const loadHealth = useHealthStore((state) => state.loadHealth);
   const loadMood = useMoodStore((state) => state.loadMood);
+  const loadFinances = useFinanceStore((state) => state.loadFinances);
+  const loadJournal = useJournalStore((state) => state.loadJournal);
   const loadSettings = useSettingsStore((state) => state.loadSettings);
 
   useEffect(() => {
@@ -49,22 +54,12 @@ export default function DashboardPage() {
     loadHabits();
     loadHealth();
     loadMood();
+    loadFinances();
+    loadJournal();
     loadSettings();
-  }, [loadHabits, loadHealth, loadMood, loadSettings]);
+  }, [loadHabits, loadHealth, loadMood, loadFinances, loadJournal, loadSettings]);
 
   const todayStr = getTrackingDate();
-
-  const { greeting, formattedDate } = useMemo(() => {
-    const hour = new Date().getHours();
-    let greeting = "Good evening";
-    if (hour < 12) greeting = "Good morning";
-    else if (hour < 18) greeting = "Good afternoon";
-
-    return {
-      greeting,
-      formattedDate: format(new Date(), "EEEE, MMMM do"),
-    };
-  }, []);
 
   const stats = useMemo(() => {
     let totalHabitTargets = 0;
@@ -165,10 +160,10 @@ export default function DashboardPage() {
       {isNewUser ? (
         <Card className="border-dashed border-2 bg-card/50">
           <CardContent className="p-12 flex flex-col items-center text-center space-y-6">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-2">
+            <div className="w-20 h-20 bg-primary/10 rounded-md flex items-center justify-center mb-2">
               <SmilePlus className="w-10 h-10 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold">Welcome to your Self Tracker</h2>
+            <h2 className="text-2xl font-bold"><FoldText text="Welcome to your Self Tracker" splitBy="word" trigger="mount" fontSize="inherit" fontWeight={700} /></h2>
             <p className="text-muted-foreground max-w-md text-sm">
               Start building better habits, tracking your mood, and monitoring your health to see your progress over time.
             </p>
@@ -180,10 +175,13 @@ export default function DashboardPage() {
         </Card>
       ) : (
         <>
-          {/* 2. Automated Daily Analyzed Report */}
+          {/* 2. Executive Comprehensive User Data Analysis Report */}
+          <ComprehensiveUserReport />
+
+          {/* 3. Daily Analyzed Insights Report */}
           <DailyAnalyticsReport />
 
-          {/* 3. Quick Stats Grid */}
+          {/* 4. Quick Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             
             {/* Habit Progress Card */}
@@ -196,7 +194,7 @@ export default function DashboardPage() {
                       {stats.habits.completed} / {stats.habits.total}
                     </div>
                   </div>
-                  <div className="p-2 bg-primary/10 rounded-xl">
+                  <div className="p-2 bg-primary/10 rounded-md">
                     <CheckCircle2 className="w-5 h-5 text-primary" />
                   </div>
                 </div>
@@ -212,7 +210,7 @@ export default function DashboardPage() {
               <CardContent className="p-6 h-full flex flex-col justify-center">
                 {todayMood ? (
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-md bg-amber-500/10 text-amber-500 flex items-center justify-center">
                       <Smile className="w-7 h-7" />
                     </div>
                     <div>
@@ -246,12 +244,12 @@ export default function DashboardPage() {
             />
           </div>
 
-          {/* 4. Charts and Spotlight Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
+          {/* 5. Charts and Spotlight Grid (Golden Ratio 8:5 Split) */}
+          <div className="grid grid-cols-1 lg:grid-cols-13 gap-8">
+            <div className="lg:col-span-8">
               <WeeklyChart habits={habits} moodEntries={moodEntries} />
             </div>
-            <div>
+            <div className="lg:col-span-5">
               <StreakSpotlight habits={habits} />
             </div>
           </div>

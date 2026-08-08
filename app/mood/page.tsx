@@ -5,6 +5,7 @@ import { useMoodStore } from "@/lib/stores/mood-store";
 import { MoodCheckin } from "@/components/mood/mood-checkin";
 import { MoodChart } from "@/components/mood/mood-chart";
 import { TagChart } from "@/components/mood/tag-chart";
+import { FoldText } from "@/components/ui/fold-text";
 
 export default function MoodPage() {
   const loadMood = useMoodStore((state) => state.loadMood);
@@ -16,7 +17,7 @@ export default function MoodPage() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Mood</h1>
+        <h1 className="text-3xl font-bold tracking-tight"><FoldText text="Mood" splitBy="char" trigger="mount" fontSize="inherit" fontWeight={700} /></h1>
         <p className="text-muted-foreground mt-1">How are you feeling today?</p>
       </div>
 

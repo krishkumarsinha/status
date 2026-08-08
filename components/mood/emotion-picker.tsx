@@ -62,7 +62,7 @@ export function EmotionPicker({
                       key={emotion.id}
                       type="button"
                       onClick={() => onSelectEmotion(emotion)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
                         isPrimary
                           ? "bg-primary text-primary-foreground shadow-md scale-105"
                           : isSecondary

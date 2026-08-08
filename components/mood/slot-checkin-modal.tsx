@@ -87,7 +87,7 @@ export function SlotCheckinModal({
             <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Overall Feeling Intensity
             </Label>
-            <div className="flex justify-between items-center bg-muted/40 p-2 rounded-2xl">
+            <div className="flex justify-between items-center bg-muted/40 p-2 rounded-lg">
               {([1, 2, 3, 4, 5] as MoodScore[]).map((score) => {
                 const isSelected = moodScore === score;
                 return (
@@ -95,7 +95,7 @@ export function SlotCheckinModal({
                     key={score}
                     type="button"
                     onClick={() => !isLocked && setMoodScore(score)}
-                    className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all ${
+                    className={`flex flex-col items-center gap-1 p-2 rounded-md transition-all ${
                       isSelected
                         ? "bg-primary/20 ring-2 ring-primary scale-110"
                         : "opacity-60 hover:opacity-100"

@@ -10,9 +10,9 @@ export function AuthGate() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-xl animate-in fade-in duration-300">
       <div className="w-full max-w-sm">
-        <Card className="border-border/60 bg-card/80 backdrop-blur-md shadow-xl rounded-2xl overflow-hidden">
+        <Card className="border-border/60 bg-card/80 backdrop-blur-md shadow-xl rounded-lg overflow-hidden">
           <CardHeader className="text-center pt-8 pb-4 space-y-2">
-            <div className="mx-auto w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-1">
+            <div className="mx-auto w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-1">
               <Activity className="w-6 h-6" />
             </div>
             <CardTitle className="text-2xl font-bold tracking-tight">Self Tracker</CardTitle>
@@ -22,7 +22,7 @@ export function AuthGate() {
           </CardHeader>
           <CardContent className="p-6 pt-2">
             <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/60 rounded-xl mb-6">
+              <TabsList className="grid w-full grid-cols-2 p-1 bg-muted/60 rounded-md mb-6">
                 <TabsTrigger 
                   value="login" 
                   className="rounded-lg text-xs font-medium py-2 transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-xs"

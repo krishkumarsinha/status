@@ -192,19 +192,19 @@ export function DailyAnalyticsReport() {
 
         {/* 4-Domain Score Chips */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-          <div className="p-3 rounded-xl bg-muted/40 border border-border/50 space-y-0.5">
+          <div className="p-3 rounded-md bg-muted/40 border border-border/50 space-y-0.5">
             <span className="text-[10px] font-bold text-muted-foreground uppercase">Habits</span>
             <p className="text-base font-extrabold text-indigo-500">{report.habitPercent}%</p>
           </div>
-          <div className="p-3 rounded-xl bg-muted/40 border border-border/50 space-y-0.5">
+          <div className="p-3 rounded-md bg-muted/40 border border-border/50 space-y-0.5">
             <span className="text-[10px] font-bold text-muted-foreground uppercase">Health Goals</span>
             <p className="text-base font-extrabold text-emerald-500">{report.healthPercent}%</p>
           </div>
-          <div className="p-3 rounded-xl bg-muted/40 border border-border/50 space-y-0.5">
+          <div className="p-3 rounded-md bg-muted/40 border border-border/50 space-y-0.5">
             <span className="text-[10px] font-bold text-muted-foreground uppercase">Mood Level</span>
             <p className="text-base font-extrabold text-amber-500">{report.moodScoreVal}%</p>
           </div>
-          <div className="p-3 rounded-xl bg-muted/40 border border-border/50 space-y-0.5">
+          <div className="p-3 rounded-md bg-muted/40 border border-border/50 space-y-0.5">
             <span className="text-[10px] font-bold text-muted-foreground uppercase">Interval Logs</span>
             <p className="text-base font-extrabold text-purple-500">{report.slotLogsCount} / 8</p>
           </div>
@@ -253,7 +253,7 @@ export function DailyAnalyticsReport() {
 
         {/* Correlations & Pattern Intelligence */}
         {report.correlations.length > 0 && (
-          <div className="p-3.5 rounded-xl bg-primary/10 border border-primary/20 space-y-1.5">
+          <div className="p-3.5 rounded-md bg-primary/10 border border-primary/20 space-y-1.5">
             <h4 className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
               <Lightbulb className="w-4 h-4 text-primary" /> Pattern Intelligence
             </h4>

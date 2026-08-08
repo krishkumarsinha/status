@@ -1,14 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { JournalTag, JOURNAL_TAGS, MoodScore } from "@/types";
 import { useJournalStore } from "@/lib/stores/journal-store";
+import { 
+  generateSentenceCompletions, 
+  predictNextWords, 
+  correctGrammarAndPolish, 
+  WRITING_SPARKS 
+} from "@/lib/ai/journal-ai";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Bookmark, 
   PlusCircle, 
@@ -18,7 +24,11 @@ import {
   Clock, 
   BookOpen, 
   CheckCircle2,
-  Heart
+  Wand2,
+  Plus,
+  CheckCheck,
+  Zap,
+  ShieldCheck
 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { isDateLocked } from "@/lib/date-utils";
@@ -30,7 +40,6 @@ interface JournalEditorProps {
 export function JournalEditor({ selectedDate }: JournalEditorProps) {
   const addEntry = useJournalStore((state) => state.addEntry);
   const deleteEntry = useJournalStore((state) => state.deleteEntry);
-  const toggleBookmark = useJournalStore((state) => state.toggleBookmark);
   const getEntriesByDate = useJournalStore((state) => state.getEntriesByDate);
 
   const dayEntries = getEntriesByDate(selectedDate);
@@ -43,8 +52,23 @@ export function JournalEditor({ selectedDate }: JournalEditorProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
+  // AI Assistant & Auto-Correct state
+  const [autoCorrectOnSave, setAutoCorrectOnSave] = useState(true);
+  const [showAiSuggestions, setShowAiSuggestions] = useState(true);
+  const [grammarNotice, setGrammarNotice] = useState<string | null>(null);
+
   // Deletion modal state
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+
+  // Real-Time Next-Words Prediction
+  const predictedWords = useMemo(() => {
+    return predictNextWords(content);
+  }, [content]);
+
+  // Full Sentence Completions
+  const completions = useMemo(() => {
+    return generateSentenceCompletions(content);
+  }, [content]);
 
   const toggleTag = (tag: JournalTag) => {
     setTags((prev) =>
@@ -64,16 +88,37 @@ export function JournalEditor({ selectedDate }: JournalEditorProps) {
     e.preventDefault();
     if (!content.trim() || isLocked) return;
 
+    let finalTitle = title.trim();
+    let finalContent = content.trim();
+    let totalFixes = 0;
+
+    // Apply automatic AI correction upon save
+    if (autoCorrectOnSave) {
+      const contentFixObj = correctGrammarAndPolish(finalContent);
+      finalContent = contentFixObj.correctedText;
+      totalFixes += contentFixObj.fixesCount;
+
+      if (finalTitle) {
+        const titleFixObj = correctGrammarAndPolish(finalTitle);
+        finalTitle = titleFixObj.correctedText;
+        totalFixes += titleFixObj.fixesCount;
+      }
+    }
+
     await addEntry({
       date: selectedDate,
-      title: title.trim() || undefined,
-      content: content.trim(),
+      title: finalTitle || undefined,
+      content: finalContent,
       mood,
       tags,
       isBookmarked,
     });
 
     setSavedSuccess(true);
+    if (totalFixes > 0) {
+      setGrammarNotice(`✨ Auto-corrected ${totalFixes} typos & grammar errors before saving!`);
+      setTimeout(() => setGrammarNotice(null), 4000);
+    }
     resetForm();
     setTimeout(() => setSavedSuccess(false), 3000);
   };
@@ -83,6 +128,35 @@ export function JournalEditor({ selectedDate }: JournalEditorProps) {
       await deleteEntry(deleteTargetId, true);
       setDeleteTargetId(null);
     }
+  };
+
+  const handleApplySpark = (sparkText: string) => {
+    setContent((prev) => (prev ? `${prev}\n${sparkText}` : sparkText));
+  };
+
+  const handleApplyCompletion = (completionText: string) => {
+    setContent((prev) => prev + completionText);
+  };
+
+  const handleApplyNextWords = () => {
+    if (!predictedWords) return;
+    setContent((prev) => {
+      const trimmed = prev.trimEnd();
+      const lastChar = trimmed.slice(-1);
+      const prefix = (lastChar === "." || lastChar === "!" || lastChar === "?" || !trimmed) ? " " : " ";
+      return trimmed + prefix + predictedWords;
+    });
+  };
+
+  const handleFixGrammar = () => {
+    const { correctedText, fixesCount } = correctGrammarAndPolish(content);
+    setContent(correctedText);
+    if (fixesCount > 0) {
+      setGrammarNotice(`✓ Fixed ${fixesCount} typos & capitalization issues!`);
+    } else {
+      setGrammarNotice("✓ Grammar and spelling look perfect!");
+    }
+    setTimeout(() => setGrammarNotice(null), 3000);
   };
 
   const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
@@ -109,29 +183,95 @@ export function JournalEditor({ selectedDate }: JournalEditorProps) {
       <CardContent className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Alert for Saved Entry */}
         {savedSuccess && (
-          <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2 animate-in fade-in duration-300">
+          <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-md text-emerald-600 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2 animate-in fade-in duration-300">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" />
-            Reflection saved to memory timeline & inputs refreshed! You can add another reflection below.
+            Reflection auto-corrected & saved to memory timeline! Inputs refreshed for next reflection.
           </div>
         )}
 
-        {/* 1. New Entry Input Form (Active Unlocked Day Only) */}
+        {/* Alert for Grammar Fix Notice */}
+        {grammarNotice && (
+          <div className="p-3 bg-primary/10 border border-primary/30 rounded-md text-primary text-xs font-semibold flex items-center gap-2 animate-in fade-in duration-300">
+            <CheckCheck className="w-4 h-4 shrink-0 text-primary" />
+            {grammarNotice}
+          </div>
+        )}
+
+        {/* 1. New Entry Input Form with Real-Time AI & Auto-Correct (Active Unlocked Day Only) */}
         {!isLocked && (
-          <form onSubmit={handleSave} className="p-4 bg-card border border-border/60 rounded-2xl space-y-4 shadow-sm">
+          <form onSubmit={handleSave} className="p-4 bg-card border border-border/60 rounded-lg space-y-4 shadow-sm">
             <div className="flex items-center justify-between border-b border-border/40 pb-2">
               <span className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
                 <PlusCircle className="w-4 h-4" /> Add New Daily Reflection
               </span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsBookmarked(!isBookmarked)}
-                className={isBookmarked ? "text-amber-500 hover:text-amber-600 h-7 w-7" : "text-muted-foreground h-7 w-7"}
-              >
-                <Bookmark className="w-4 h-4 fill-current" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setAutoCorrectOnSave(!autoCorrectOnSave)}
+                  className={`text-[10px] px-2 py-0.5 rounded-md font-bold transition-all flex items-center gap-1 border ${
+                    autoCorrectOnSave
+                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                      : "bg-muted text-muted-foreground border-border"
+                  }`}
+                  title="Automatically corrects typos and grammar when saving"
+                >
+                  <ShieldCheck className="w-3 h-3" />
+                  Auto-Correct: {autoCorrectOnSave ? "ON" : "OFF"}
+                </button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleFixGrammar}
+                  disabled={!content.trim()}
+                  className="h-7 text-[11px] gap-1 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10"
+                >
+                  <CheckCheck className="w-3.5 h-3.5" /> Polish Now
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAiSuggestions(!showAiSuggestions)}
+                  className="h-7 text-[11px] gap-1 text-primary hover:bg-primary/10"
+                >
+                  <Wand2 className="w-3.5 h-3.5" /> {showAiSuggestions ? "Hide AI" : "Show AI"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsBookmarked(!isBookmarked)}
+                  className={isBookmarked ? "text-amber-500 hover:text-amber-600 h-7 w-7" : "text-muted-foreground h-7 w-7"}
+                >
+                  <Bookmark className="w-4 h-4 fill-current" />
+                </Button>
+              </div>
             </div>
+
+            {/* AI Writing Sparks Toolbar */}
+            {showAiSuggestions && (
+              <div className="p-3 rounded-md bg-gradient-to-r from-primary/10 via-card to-muted/40 border border-primary/20 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-primary flex items-center gap-1 uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5 text-primary" /> AI Writing Sparks
+                  </span>
+                  <span className="text-[10px] text-muted-foreground">Click to start or expand reflection</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {WRITING_SPARKS.map((spark, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleApplySpark(spark.text)}
+                      className="text-[11px] px-2.5 py-1 rounded-lg bg-card hover:bg-primary/10 text-foreground transition-all border border-border/50 font-medium"
+                    >
+                      {spark.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Title */}
             <div className="space-y-1">
@@ -143,8 +283,8 @@ export function JournalEditor({ selectedDate }: JournalEditorProps) {
               />
             </div>
 
-            {/* Content Area */}
-            <div className="space-y-1">
+            {/* Content Area & Real-Time Next-Words Pill */}
+            <div className="space-y-2 relative">
               <textarea
                 placeholder="What's on your mind right now? Capture your thoughts, feelings, or gratitude..."
                 value={content}
@@ -152,7 +292,53 @@ export function JournalEditor({ selectedDate }: JournalEditorProps) {
                 rows={5}
                 className="w-full resize-none bg-transparent border-0 text-sm leading-relaxed focus:outline-none focus:ring-0 placeholder:text-muted-foreground/60"
               />
+
+              {/* Live Real-Time Next Words Prediction Badge */}
+              {showAiSuggestions && predictedWords && (
+                <div className="flex items-center justify-between p-2 rounded-md bg-primary/5 border border-primary/20 text-xs animate-in fade-in duration-200">
+                  <span className="text-muted-foreground flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                    <span>Real-Time Next Words:</span>
+                    <strong className="text-primary italic">"{predictedWords}"</strong>
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="xs"
+                    onClick={handleApplyNextWords}
+                    className="h-6 text-[10px] gap-1 font-bold bg-card hover:bg-primary/10"
+                  >
+                    <Plus className="w-3 h-3 text-primary" /> Append Next Words
+                  </Button>
+                </div>
+              )}
             </div>
+
+            {/* AI Sentence Autocomplete Suggestions */}
+            {showAiSuggestions && completions.length > 0 && (
+              <div className="p-3 rounded-md bg-card border border-border/60 space-y-2">
+                <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                  <Wand2 className="w-3 h-3 text-emerald-500" /> AI Sentence Completion Suggestions
+                </span>
+                <div className="space-y-1.5">
+                  {completions.map((option, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleApplyCompletion(option.text)}
+                      className="w-full text-left text-xs p-2 rounded-lg bg-muted/40 hover:bg-primary/10 text-foreground transition-all flex items-center justify-between border border-border/40 group"
+                    >
+                      <span className="italic text-muted-foreground group-hover:text-foreground">
+                        "{option.text.trim()}"
+                      </span>
+                      <span className="text-[10px] font-bold text-primary flex items-center gap-0.5 shrink-0 ml-2">
+                        <Plus className="w-3 h-3" /> Insert
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Mood & Tags Selection */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-border/40">
@@ -238,7 +424,7 @@ export function JournalEditor({ selectedDate }: JournalEditorProps) {
           </div>
 
           {dayEntries.length === 0 ? (
-            <div className="text-center py-10 border border-dashed rounded-2xl text-muted-foreground space-y-2">
+            <div className="text-center py-10 border border-dashed rounded-lg text-muted-foreground space-y-2">
               <BookOpen className="w-8 h-8 mx-auto text-muted-foreground/50" />
               <p className="text-sm font-medium">No reflections recorded for this date.</p>
               {!isLocked && (
@@ -255,7 +441,7 @@ export function JournalEditor({ selectedDate }: JournalEditorProps) {
                 return (
                   <div
                     key={entry.id}
-                    className="p-4 rounded-2xl bg-card border border-border/60 space-y-3 shadow-xs hover:border-primary/30 transition-all"
+                    className="p-4 rounded-lg bg-card border border-border/60 space-y-3 shadow-xs hover:border-primary/30 transition-all"
                   >
                     <div className="flex items-center justify-between border-b border-border/40 pb-2">
                       <div className="flex items-center gap-2">

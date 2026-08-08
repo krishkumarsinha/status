@@ -64,7 +64,7 @@ export function ThreeHourSlotPicker({
             <div
               key={slot.id}
               onClick={() => onSelectSlot(slot)}
-              className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between h-24 relative group ${
+              className={`p-3 rounded-lg border transition-all cursor-pointer flex flex-col justify-between h-24 relative group ${
                 isSelected
                   ? "border-primary bg-primary/10 shadow-sm ring-2 ring-primary/30"
                   : isCurrentSlot

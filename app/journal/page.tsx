@@ -5,6 +5,7 @@ import { useJournalStore } from "@/lib/stores/journal-store";
 import { JournalEditor } from "@/components/journal/journal-editor";
 import { JournalList } from "@/components/journal/journal-list";
 import { getTrackingDate } from "@/lib/date-utils";
+import { FoldText } from "@/components/ui/fold-text";
 
 export default function JournalPage() {
   const [mounted, setMounted] = useState(false);
@@ -22,7 +23,7 @@ export default function JournalPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Daily Journal</h1>
+        <h1 className="text-3xl font-bold tracking-tight"><FoldText text="Daily Journal" splitBy="char" trigger="mount" fontSize="inherit" fontWeight={700} /></h1>
         <p className="text-muted-foreground mt-1">
           Capture your thoughts, reflections, and memories every single day.
         </p>

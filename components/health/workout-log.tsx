@@ -45,7 +45,7 @@ export function WorkoutLog() {
                 className="flex items-center justify-between p-3 rounded-lg border bg-card text-card-foreground shadow-sm"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="p-2 bg-primary/10 text-primary rounded-full">
+                  <div className="p-2 bg-primary/10 text-primary rounded-md">
                     <Activity className="w-4 h-4" />
                   </div>
                   <div>

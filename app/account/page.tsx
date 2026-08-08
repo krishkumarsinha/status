@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { FoldText } from "@/components/ui/fold-text";
 import { 
   User, 
   Trash2, 
@@ -102,7 +103,7 @@ export default function AccountPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Account & Profile</h1>
+        <h1 className="text-3xl font-bold tracking-tight"><FoldText text="Account & Profile" splitBy="char" trigger="mount" fontSize="inherit" fontWeight={700} /></h1>
         <p className="text-muted-foreground mt-1">
           Manage your cloud authentication session, profile settings, and lifetime tracking stats.
         </p>
@@ -122,13 +123,13 @@ export default function AccountPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           {user ? (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-muted/40 border">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-md bg-muted/40 border">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-foreground">
                     {user.email || user.displayName || "Personnel Account"}
                   </span>
-                  <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                  <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
                     Active
                   </span>
                 </div>
@@ -172,7 +173,7 @@ export default function AccountPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="p-5 bg-primary/10 text-primary rounded-3xl border border-primary/20 shadow-inner flex items-center justify-center">
+            <div className="p-5 bg-primary/10 text-primary rounded-lg border border-primary/20 shadow-inner flex items-center justify-center">
               {(() => {
                 const item = AVATAR_ICONS.find((a) => a.id === avatar) || AVATAR_ICONS[0];
                 const IconComp = item.icon;
@@ -202,7 +203,7 @@ export default function AccountPage() {
                         key={item.id}
                         type="button"
                         onClick={() => saveProfile(displayName, item.id)}
-                        className={`p-2.5 rounded-xl transition-all border ${
+                        className={`p-2.5 rounded-md transition-all border ${
                           isSelected
                             ? "bg-primary text-primary-foreground border-primary shadow-sm scale-105"
                             : "bg-muted/50 hover:bg-muted text-muted-foreground border-border/50"
@@ -227,31 +228,31 @@ export default function AccountPage() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 text-center">
-            <div className="p-4 rounded-xl bg-muted/50 border border-border/50 space-y-1">
+            <div className="p-4 rounded-md bg-muted/50 border border-border/50 space-y-1">
               <Target className="w-5 h-5 mx-auto text-indigo-500 mb-1" />
               <div className="text-2xl font-bold">{habits.length}</div>
               <p className="text-xs text-muted-foreground">Habits</p>
             </div>
 
-            <div className="p-4 rounded-xl bg-muted/50 border border-border/50 space-y-1">
+            <div className="p-4 rounded-md bg-muted/50 border border-border/50 space-y-1">
               <Heart className="w-5 h-5 mx-auto text-emerald-500 mb-1" />
               <div className="text-2xl font-bold">{healthEntries.length}</div>
               <p className="text-xs text-muted-foreground">Health Logs</p>
             </div>
 
-            <div className="p-4 rounded-xl bg-muted/50 border border-border/50 space-y-1">
+            <div className="p-4 rounded-md bg-muted/50 border border-border/50 space-y-1">
               <Smile className="w-5 h-5 mx-auto text-amber-500 mb-1" />
               <div className="text-2xl font-bold">{moodEntries.length}</div>
               <p className="text-xs text-muted-foreground">Mood Logs</p>
             </div>
 
-            <div className="p-4 rounded-xl bg-muted/50 border border-border/50 space-y-1">
+            <div className="p-4 rounded-md bg-muted/50 border border-border/50 space-y-1">
               <Wallet className="w-5 h-5 mx-auto text-purple-500 mb-1" />
               <div className="text-2xl font-bold">{transactions.length}</div>
               <p className="text-xs text-muted-foreground">Transactions</p>
             </div>
 
-            <div className="p-4 rounded-xl bg-muted/50 border border-border/50 space-y-1">
+            <div className="p-4 rounded-md bg-muted/50 border border-border/50 space-y-1">
               <BookOpen className="w-5 h-5 mx-auto text-rose-500 mb-1" />
               <div className="text-2xl font-bold">{journalEntries.length}</div>
               <p className="text-xs text-muted-foreground">Journal Entries</p>

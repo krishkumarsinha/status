@@ -90,7 +90,7 @@ export function SavingsTab() {
                 {currencySymbol}{totalSaved.toLocaleString()}
               </h3>
             </div>
-            <div className="p-3 bg-indigo-500/10 rounded-2xl text-indigo-500">
+            <div className="p-3 bg-indigo-500/10 rounded-lg text-indigo-500">
               <PiggyBank className="w-6 h-6" />
             </div>
           </CardContent>
@@ -104,7 +104,7 @@ export function SavingsTab() {
                 {currencySymbol}{totalTarget.toLocaleString()}
               </h3>
             </div>
-            <div className="p-3 bg-primary/10 rounded-2xl text-primary">
+            <div className="p-3 bg-primary/10 rounded-lg text-primary">
               <Target className="w-6 h-6" />
             </div>
           </CardContent>

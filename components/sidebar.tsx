@@ -46,7 +46,7 @@ export function Sidebar() {
   return (
     <aside className="hidden md:flex flex-col fixed inset-y-0 left-0 w-72 border-r bg-sidebar/50 backdrop-blur-xl transition-all duration-300 z-30">
       <div className="flex items-center gap-3 px-6 h-16 border-b border-border/50">
-        <div className="bg-primary/10 p-2 rounded-xl text-primary">
+        <div className="bg-primary/20 p-2 rounded-md text-primary animate-float">
           <Activity className="h-6 w-6" />
         </div>
         <span className="font-semibold text-lg tracking-tight">Self Tracker</span>
@@ -63,9 +63,9 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group",
+                "flex items-center gap-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-200 group hover:translate-x-1",
                 isActive
-                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]"
                   : "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
               )}
             >
@@ -90,7 +90,7 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group",
+                "flex items-center gap-3 px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-200 group",
                 isActive
                   ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
                   : "text-muted-foreground hover:bg-muted/80 hover:text-foreground"
@@ -112,7 +112,7 @@ export function Sidebar() {
         <Button
           variant="ghost"
           size="sm"
-          className="w-full justify-start gap-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/80"
+          className="w-full justify-start gap-3 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/80"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         >
           {mounted ? (
