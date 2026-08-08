@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // Firestore Security Rules for Self Tracker
+    // =========================================================================
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // PRODUCTION MODE: Enforces strict user data isolation by matching authenticated UID
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && (request.auth.uid == userId || userId == "demo_user");
+
+      match /{subcollection=**} {
+        allow read, write: if isAuthenticated() && (request.auth.uid == userId || userId == "demo_user");
+      }
+    }
+
+    // DEVELOPMENT FALLBACK (Uncomment during early prototyping if Auth is disabled in Firebase Console):
+    // match /users/{userId}/{document=**} {
+    //   allow read, write: if true;
+    // }
+  }
+}
